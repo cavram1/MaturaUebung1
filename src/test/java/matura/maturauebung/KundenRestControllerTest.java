@@ -1,5 +1,6 @@
 package matura.maturauebung;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import matura.maturauebung.controller.KundenController;
 import matura.maturauebung.model.Admin;
@@ -52,6 +53,7 @@ public class KundenRestControllerTest {
 
     Kunde k;
     List<Kunde> list;
+
     @BeforeAll
     void setup() {
 
@@ -89,9 +91,27 @@ public class KundenRestControllerTest {
         }
     }
 
-
     @Test
     @Order(2)
+    void shouldCreateKunde() throws Exception {
+        Kunde tutorial = new Kunde(1L, "Spring Boot @WebMvcTest", "Description");
+        Optional<Admin> a = adminRepository.findById(1L);
+
+
+        if (a.isPresent()) {
+            Admin admin = a.get();
+            mockMvc.perform(post("/api/tutorials")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + admin.getToken())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(tutorial)))
+                    .andExpect(status().isCreated())
+                    .andDo(print());
+        }
+    }
+
+
+    @Test
+    @Order(3)
     void returnCustomer() throws Exception {
         Optional<Admin> a = adminRepository.findById(1L);
 
@@ -111,7 +131,7 @@ public class KundenRestControllerTest {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     void returnCustomers() throws Exception {
         Optional<Admin> a = adminRepository.findById(1L);
 
@@ -128,27 +148,28 @@ public class KundenRestControllerTest {
             Kunde[] list = objectMapper.readValue(m.getResponse().getContentAsString(), Kunde[].class);
             assertEquals(kundenRepository.findAll().size(), list.length);
         }
-
-
     }
 
     @Test
-    @Order(4)
-    void r() throws Exception {
+    @Order(5)
+    void shouldReturnTutorial() throws Exception {
+        long id = 1L;
+        Kunde tutorial = new Kunde(id, "Spring Boot @WebMvcTest", "Description");
+
         Optional<Admin> a = adminRepository.findById(1L);
 
         if (a.isPresent()) {
 
             Admin admin = a.get();
-            mockMvc.perform(get("/kunde/load")
+            when(kundenRepository.findById(id)).thenReturn(Optional.of(tutorial));
+            mockMvc.perform(get("/kunde/load/{id}", id)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + admin.getToken()))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.size()").value(list.size()))
+                    .andExpect(jsonPath("$.id").value(id))
+                    .andExpect(jsonPath("$.email").value(tutorial.getEmail()))
+                    .andExpect(jsonPath("$.name").value(tutorial.getName()))
                     .andDo(print());
 
-            assertEquals(kundenRepository.findAll().size(), 1);
         }
-
-
     }
 }
