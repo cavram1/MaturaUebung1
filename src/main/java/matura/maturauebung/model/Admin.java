@@ -7,26 +7,27 @@ import lombok.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "marke")
+@Table(name = "admin")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-public class Marke {
+public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
-    private Long markeID;
+    private Long adminID;
 
     @Column
     @NonNull
-    private String name;
+    private String email;
 
-    @OneToMany(mappedBy = "marke", fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonIgnore
-    private Set<Modell> modellSet;
+    @Column
+    @NonNull
+    private String password;
 
-    @Override
-    public String toString() {
-        return ", name='" + name + '\'' +
-                '}';
-    }
+    @Column
+    private String token;
+
+    @Column(nullable = false)
+    private long expireingTime = 0;
+
 }

@@ -7,26 +7,37 @@ import lombok.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "marke")
+@Table(name = "modell")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-public class Marke {
+public class Modell {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
-    private Long markeID;
+    private Long modelID;
 
     @Column
     @NonNull
     private String name;
 
-    @OneToMany(mappedBy = "marke", fetch = FetchType.LAZY, orphanRemoval = true)
+    @Column
+    @NonNull
+    private float tagesSatzt;
+
+    @OneToMany(mappedBy = "modell", fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
-    private Set<Modell> modellSet;
+    private Set<Verleih> verleihs;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinColumn
+    private Marke marke;
 
     @Override
     public String toString() {
-        return ", name='" + name + '\'' +
+        return "Modell{" +
+                "name='" + name + '\'' +
+                ", tagesSatzt=" + tagesSatzt +
                 '}';
     }
 }
