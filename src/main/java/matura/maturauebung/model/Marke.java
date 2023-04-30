@@ -1,2 +1,4 @@
-package matura.maturauebung.model;public class Marke {
+package matura.maturauebung.model;
+
+public class Marke {
 }
