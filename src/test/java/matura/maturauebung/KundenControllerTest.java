@@ -23,8 +23,8 @@ class KundenControllerTest {
     @Order(1)
     public void createKunde() {
         k = new Kunde();
-        k.setName("MAx");
-        k.setEmail("e@g.com");
+        k.setName("Max");
+        k.setEmail("m@x.com");
 
         Assertions.assertDoesNotThrow(() ->
                 kundenRepository.save(k)
@@ -35,7 +35,7 @@ class KundenControllerTest {
     @Order(2)
     public void selectKunde() {
         Assertions.assertDoesNotThrow(() -> {
-                    Assertions.assertEquals("MAx", k.getName());
+                    Assertions.assertEquals("Max", k.getName());
                 }
         );
     }

@@ -52,6 +52,10 @@ public class KundenController {
                 adminRepository.save(admin);
                 adminRepository.flush();
 
+                if(kunde.getEmail().length() > 4){
+                    throw new Exception("email to long");
+                }
+
                 kundenRepository.save(kunde);
                 kundenRepository.flush();
 

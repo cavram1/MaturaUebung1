@@ -21,6 +21,33 @@ public class AdminController {
     @Autowired
     private AdminRepository adminRepository;
 
+
+    @Operation(description = "sumthing")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "logged in successfully",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "error occurred while logging in",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "unauthorized",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @PostMapping("/admin/register")
+    private ResponseEntity<Admin> register(@Parameter(description = "the request body") @RequestBody Admin a) {
+
+        try {
+            if (a != null) {
+                adminRepository.save(a);
+                adminRepository.flush();
+
+                return new ResponseEntity<>(a, HttpStatus.OK);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
     @Operation(description = "sumthing")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "logged in successfully",
